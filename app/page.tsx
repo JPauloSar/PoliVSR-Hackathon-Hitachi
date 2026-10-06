@@ -1,47 +1,201 @@
-'use client'
+'use client';
 
-import { useMemo, useState } from 'react'
-import { ArrowRight, BarChart3, CircleHelp, Gauge, Menu, X } from 'lucide-react'
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
-const tabs = [
-  { id: 'about', label: 'Quem Somos', icon: CircleHelp },
-  { id: 'data', label: 'Pesquisas (Dados)', icon: BarChart3 },
-  { id: 'simulator', label: 'Simulador VSR', icon: Gauge },
-] as const
+export default function Home() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [heroText, setHeroText] = useState('');
 
-type TabId = (typeof tabs)[number]['id']
+  const slides = [
+    {
+      image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-Ix899Ndz6OuZ3jewtpFh7m8GbM0LNN.png',
+      text: 'A energia do futuro está sendo construída hoje.',
+    },
+    {
+      image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-HqYSkMu3SnfJcRxvMf7mbuJo0KvF33.png',
+      text: 'A demanda cai. As sobretensões sobem. A rede precisa responder.',
+    },
+    {
+      image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-CLcyeXMizzU3qyYIuk1YS7TKtCWIh2.png',
+      text: 'Nesse momento, surgem tecnologias que mudam o jogo.',
+    },
+  ];
 
-function getReactorCount(hour: number) {
-  const daylight = Math.max(0, Math.sin(((hour - 6) / 12) * Math.PI))
-  return Math.max(1, Math.round(1 + daylight * 8))
+  useEffect(() => {
+    setHeroText(slides[currentSlide].text);
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [currentSlide]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle form submission
+  };
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Navigation */}
+      <nav className="flex items-center justify-between px-6 py-4 bg-white">
+        <div className="text-2xl font-bold text-gray-900">PoliVSR</div>
+        <button className="md:hidden text-gray-900">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </nav>
+
+      {/* Hero Slider */}
+      <div className="relative w-full h-96 md:h-screen overflow-hidden bg-gray-900">
+        {/* Slides */}
+        {slides.map((slide, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              index === currentSlide ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <Image
+              src={slide.image}
+              alt={`Slide ${index + 1}`}
+              fill
+              className="object-cover"
+              priority={index === 0}
+            />
+            <div className="absolute inset-0 bg-black/50"></div>
+          </div>
+        ))}
+
+        {/* Hero Text */}
+        <div className="absolute inset-0 flex items-center justify-center px-6">
+          <h1 className="text-3xl md:text-5xl font-bold text-white text-center max-w-4xl transition-all duration-700">
+            {heroText}
+          </h1>
+        </div>
+
+        {/* Slide Indicators */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                index === currentSlide ? 'bg-white w-8' : 'bg-white/50'
+              }`}
+              aria-label={`Ir para slide ${index + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Bloco 1: Quem somos */}
+      <section className="bg-white px-6 py-16 md:py-24">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Quem somos</h2>
+          <p className="text-gray-700 text-lg leading-relaxed">
+            Somos um grupo de pesquisa formado por alunos de Iniciação Científica (ICs) e Mestrandos da Poli-USP, atuando em parceria direta com a comissão de P&D da Hitachi Energy e grandes transmissoras. Nossa missão é transformar conhecimento acadêmico em soluções aplicáveis para o Sistema Interligado Nacional (SIN). Com a expansão das linhas e o crescimento das fontes renováveis intermitentes, a dinâmica do grid mudou: a demanda varia, a tensão dispara e os equipamentos precisam responder com precisão. O PoliVSR nasce para viabilizar essa transição para uma rede flexível e resiliente.
+          </p>
+        </div>
+      </section>
+
+      {/* Bloco 2: O que estamos fazendo */}
+      <section className="bg-gray-50 px-6 py-16 md:py-24">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">O que estamos fazendo</h2>
+          <p className="text-gray-700 text-lg leading-relaxed">
+            Conduzimos pesquisas aplicadas para quantificar os benefícios do Reator de Derivação Variável (VSR). Nosso foco é demonstrar, com dados medidos, como essa tecnologia resolve os desafios sistêmicos que a rede enfrenta com a queda de carga diurna. Este site é um repositório técnico aberto, permitindo que o setor acompanhe a validação da tecnologia e se junte a nós na próxima evolução do sistema.
+          </p>
+        </div>
+      </section>
+
+      {/* Bloco 3: O que queremos */}
+      <section className="bg-white px-6 py-16 md:py-24">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">O que queremos</h2>
+          <p className="text-gray-700 text-lg leading-relaxed">
+            Acreditamos na aliança entre a universidade e a indústria para acelerar a inovação. Queremos atrair concessionárias de transmissão para estudos práticos, comprovando a drástica redução nos custos operacionais (OPEX) e no desgaste de ativos. A meta final é fornecer ao ONS e à EPE embasamento técnico para especificar o VSR nos próximos leilões. A tecnologia já está disponível para produção local no HUB da Hitachi em Guarulhos; nossa missão é provar que essa é a melhor decisão de investimento.
+          </p>
+        </div>
+      </section>
+
+      {/* Bloco 4: O que é o VSR e por que ele é superior? */}
+      <section className="bg-gray-50 px-6 py-16 md:py-24">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">O que é o VSR e por que ele é superior?</h2>
+          <p className="text-gray-700 text-lg leading-relaxed">
+            Hoje, a rede utiliza reatores fixos operando como interruptores brutos. Para controlar a tensão, realizam-se manobras agressivas de disjuntor, diminuindo a vida útil do equipamento e gerando restrições operativas. O Variable Shunt Reactor (VSR) funciona como um dimmer. Equipado com um comutador sob carga (OLTC), ele altera o número de espiras ativas em pequenos degraus automáticos, ajustando a absorção de potência reativa sem desconectar o ativo. Isso estabiliza a rede e viabiliza a integração de energias renováveis.
+          </p>
+        </div>
+      </section>
+
+      {/* Seção de Contato B2B e Call-to-Action Final */}
+      <section className="bg-gray-950 px-6 py-24 text-white">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-4xl font-bold mb-4">Traga a estabilidade do VSR para a sua concessão.</h2>
+          <p className="text-lg text-gray-400 mb-12 max-w-3xl">
+            O PoliVSR está de portas abertas para novas parcerias de P&D. Se a sua transmissora enfrenta altos custos com desgaste de disjuntores e sobretensões diárias durante a carga leve, junte-se a nós para um estudo de viabilidade técnica e financeira.
+          </p>
+
+          {/* Grid 2 Colunas */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            {/* Coluna 1: Dados Institucionais */}
+            <div className="flex flex-col gap-6">
+              <div>
+                <p className="text-gray-400 text-sm mb-1">Email</p>
+                <p className="text-white text-lg">parcerias@polivsr.usp.br</p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-sm mb-1">Telefone</p>
+                <p className="text-white text-lg">+55 (11) 3091-0000</p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-sm mb-1">Pesquisa Aplicada</p>
+                <p className="text-white text-lg">Poli-USP, São Paulo - SP</p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-sm mb-1">Engenharia e Produção</p>
+                <p className="text-white text-lg">Hitachi Energy HUB, Guarulhos - SP</p>
+              </div>
+            </div>
+
+            {/* Coluna 2: Formulário de Contato */}
+            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+              <input
+                type="text"
+                placeholder="Nome completo"
+                className="bg-gray-900 border border-gray-700 text-white p-3 rounded placeholder-gray-500 focus:outline-none focus:border-red-600"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Empresa (Concessionária / Agente)"
+                className="bg-gray-900 border border-gray-700 text-white p-3 rounded placeholder-gray-500 focus:outline-none focus:border-red-600"
+                required
+              />
+              <input
+                type="email"
+                placeholder="E-mail corporativo"
+                className="bg-gray-900 border border-gray-700 text-white p-3 rounded placeholder-gray-500 focus:outline-none focus:border-red-600"
+                required
+              />
+              <textarea
+                placeholder="Como as sobretensões afetam o OPEX da sua operação hoje?"
+                rows={8}
+                className="bg-gray-900 border border-gray-700 text-white p-3 rounded placeholder-gray-500 focus:outline-none focus:border-red-600"
+                required
+              />
+              <button
+                type="submit"
+                className="bg-red-600 hover:bg-red-700 text-white font-bold p-4 rounded text-center transition-colors"
+              >
+                Solicitar Estudo de Viabilidade
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
 }
-
-function BrandMark() {
-  return <span className="flex items-center gap-3" aria-label="PoliVSR"><svg viewBox="0 0 28 28" className="size-7" role="img" aria-label="Marca PoliVSR"><ellipse cx="7" cy="14" rx="3.2" ry="10" fill="none" stroke="currentColor" strokeWidth="3" /><ellipse cx="14" cy="14" rx="3.2" ry="10" fill="none" stroke="currentColor" strokeWidth="3" /><ellipse cx="21" cy="14" rx="3.2" ry="10" fill="none" stroke="currentColor" strokeWidth="3" /></svg><span className="text-[1.35rem] font-extrabold tracking-[-0.06em]">Poli<span className="text-[#e60000]">VSR</span></span></span>
-}
-
-function CurveChart({ hour }: { hour: number }) {
-  const markerX = 8 + (hour / 24) * 84
-  return <div className="relative w-full max-w-5xl" aria-label="Gráfico da curva de pato e resposta do VSR" role="img"><svg viewBox="0 0 100 46" className="h-auto w-full overflow-visible"><defs><linearGradient id="curve-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#e60000" stopOpacity=".5" /><stop offset="1" stopColor="#e60000" stopOpacity="0" /></linearGradient><linearGradient id="curve-stroke"><stop stopColor="#ff7777" /><stop offset=".5" stopColor="#e60000" /><stop offset="1" stopColor="#ff7777" /></linearGradient></defs><path d="M4 36H96M4 23H96M4 10H96" stroke="white" strokeOpacity=".1" strokeWidth=".25" /><path d="M4 10 C18 11, 23 35, 39 38 C50 40, 56 38, 64 25 C74 9, 83 8, 96 13 L96 42 L4 42 Z" fill="url(#curve-fill)" /><path d="M4 10 C18 11, 23 35, 39 38 C50 40, 56 38, 64 25 C74 9, 83 8, 96 13" fill="none" stroke="url(#curve-stroke)" strokeWidth=".85" vectorEffect="non-scaling-stroke" /><line x1={markerX} x2={markerX} y1="5" y2="42" stroke="white" strokeOpacity=".75" strokeDasharray="1 1" strokeWidth=".35" /><circle cx={markerX} cy="25" r="1.4" fill="#fff" stroke="#e60000" strokeWidth=".5" /></svg><div className="mt-2 flex justify-between text-[10px] font-bold uppercase tracking-[.18em] text-slate-500"><span>Baixa tensão</span><span>Curva de pato</span><span>Alta tensão</span></div></div>
-}
-
-function Hero() {
-  const [hour, setHour] = useState(13)
-  const reactors = getReactorCount(hour)
-  const maneuvers = Math.max(18, Math.round(42 - reactors * 1.8 + Math.abs(hour - 13) * 1.4))
-  const stats = useMemo(() => ({ reactors, maneuvers }), [reactors, maneuvers])
-
-  return <>
-    <section className="bg-slate-950 px-5 pb-20 pt-32 text-center text-white sm:px-8 sm:pt-40 lg:pb-28">
-      <div className="mx-auto flex max-w-6xl flex-col items-center"><p className="mb-5 text-xs font-bold uppercase tracking-[.3em] text-red-400">PoliVSR · pesquisa aplicada</p><p className="text-2xl font-medium text-white sm:text-3xl">Nesse momento,</p><h1 className="my-2 text-6xl font-black leading-none tracking-[-.07em] text-[#e60000] sm:text-8xl lg:text-[9rem]">{stats.maneuvers} Manobras</h1><p className="text-2xl font-medium text-white sm:text-3xl">foram feitas em todo o país.</p><p className="mt-7 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">{stats.reactors} reatores fixos estão ligados no SIN apenas para dar conta da baixa tensão gerada pela sobra de reativo.</p><div className="mt-14 w-full"><CurveChart hour={hour} /></div><div className="mt-10 w-full max-w-3xl"><label htmlFor="hero-hour" className="mb-3 flex justify-between text-xs font-bold uppercase tracking-[.16em] text-slate-400"><span>00h</span><span>Hora do dia · {String(hour).padStart(2, '0')}h</span><span>24h</span></label><input id="hero-hour" aria-label="Hora do dia" type="range" min="0" max="24" value={hour} onChange={(event) => setHour(Number(event.target.value))} className="h-2 w-full cursor-pointer accent-[#e60000]" /><p className="mt-5 text-sm text-slate-400 sm:text-base">O VSR transforma os degraus agressivos de comutação em ajustes contínuos e suaves.</p></div><button onClick={() => document.getElementById('about-project')?.scrollIntoView({ behavior: 'smooth' })} className="mt-9 inline-flex items-center gap-3 bg-[#e60000] px-6 py-4 text-sm font-bold text-white transition hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">Conheça o projeto <ArrowRight data-icon="inline-end" /></button></div>
-    </section>
-    <section id="about-project" className="bg-white px-6 py-20 sm:px-10 lg:py-28"><div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-[.8fr_1.2fr] md:gap-24"><div><p className="text-xs font-bold uppercase tracking-[.25em] text-[#e60000]">01 · O contexto</p><h2 className="mt-5 text-4xl font-extrabold tracking-[-.05em] text-slate-950 sm:text-6xl">A demanda cai. A complexidade aumenta.</h2></div><p className="max-w-2xl text-lg leading-8 text-slate-700 sm:text-xl">A expansão das fontes renováveis está mudando a dinâmica do Sistema Interligado Nacional. Quando a demanda diminui, a tensão sobe e equipamentos convencionais passam a operar no limite. O Brasil precisa de uma resposta mais inteligente, contínua e preparada para a variabilidade.</p></div></section>
-    <section className="bg-slate-50 px-6 py-20 sm:px-10 lg:py-28"><div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-[1.2fr_.8fr] md:gap-24"><div className="order-2 md:order-1"><p className="max-w-3xl text-lg leading-8 text-slate-700 sm:text-xl">O PoliVSR investiga como reatores de derivação variável podem absorver o excesso de reativo com precisão. Em vez de depender de manobras discretas, a rede passa a contar com um ajuste gradual, responsivo e mais confiável.</p><p className="mt-7 max-w-3xl text-lg leading-8 text-slate-700 sm:text-xl">A tecnologia conecta pesquisa acadêmica, experiência industrial e necessidades reais de operação.</p></div><div className="order-1 md:order-2"><p className="text-xs font-bold uppercase tracking-[.25em] text-[#e60000]">02 · A resposta</p><h2 className="mt-5 text-4xl font-extrabold tracking-[-.05em] text-slate-950 sm:text-6xl">Da manobra fixa ao controle variável.</h2></div></div></section>
-    <section className="bg-white px-6 py-20 sm:px-10 lg:py-28"><div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-[.8fr_1.2fr] md:gap-24"><div><p className="text-xs font-bold uppercase tracking-[.25em] text-[#e60000]">03 · A pesquisa</p><h2 className="mt-5 text-4xl font-extrabold tracking-[-.05em] text-slate-950 sm:text-6xl">Universidade e indústria no mesmo circuito.</h2></div><p className="max-w-2xl text-lg leading-8 text-slate-700 sm:text-xl">Somos alunos de Iniciação Científica e mestrandos da Poli-USP, em parceria com a Hitachi Energy e transmissoras de energia. Juntos, transformamos conhecimento em uma solução que pode ser medida, testada e aplicada.</p></div></section>
-    <section className="bg-slate-950 px-6 py-20 text-white sm:px-10 lg:py-28"><div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-[1.2fr_.8fr] md:gap-24"><div><p className="text-lg leading-8 text-slate-300 sm:text-xl">Uma rede mais estável significa menos manutenção, mais confiabilidade sistêmica e melhores condições para integrar a energia renovável que o país já produz.</p><button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="mt-9 inline-flex items-center gap-3 border border-white px-6 py-4 text-sm font-bold transition hover:bg-white hover:text-slate-950">Voltar ao início <ArrowRight data-icon="inline-end" /></button></div><div><p className="text-xs font-bold uppercase tracking-[.25em] text-red-400">04 · O impacto</p><h2 className="mt-5 text-4xl font-extrabold tracking-[-.05em] sm:text-6xl">Mais controle para um futuro variável.</h2></div></div></section>
-  </>
-}
-
-function Placeholder({ type }: { type: Exclude<TabId, 'about'> }) { const isData = type === 'data'; return <div className="mx-auto flex min-h-[70vh] max-w-4xl flex-col items-center justify-center px-6 pt-24 text-center"><p className="text-xs font-bold uppercase tracking-[.2em] text-red-600">Módulo em desenvolvimento</p><h1 className="mt-4 text-5xl font-extrabold tracking-[-.05em] text-slate-950">{isData ? 'Pesquisas e dados' : 'Simulador VSR'}</h1><p className="mt-5 max-w-lg leading-7 text-slate-500">{isData ? 'Explore em breve os dados de carga e tensão do Sistema Interligado Nacional.' : 'Experimente em breve diferentes cenários e veja como o reator variável responde à rede.'}</p></div> }
-
-export default function Page() { const [activeTab, setActiveTab] = useState<TabId>('about'); const [menuOpen, setMenuOpen] = useState(false); return <main className="min-h-screen bg-white text-slate-950"><header className="fixed inset-x-0 top-0 z-20 border-b border-slate-200 bg-white"><div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-16"><button onClick={() => setActiveTab('about')} aria-label="Ir para o início"><BrandMark /></button><nav className="hidden items-center gap-1 md:flex" aria-label="Navegação principal">{tabs.map((tab) => { const Icon = tab.icon; return <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`flex items-center gap-2 border-b-2 px-4 py-7 text-sm font-bold transition ${activeTab === tab.id ? 'border-[#e60000] text-slate-950' : 'border-transparent text-slate-500 hover:text-slate-950'}`}><Icon data-icon="inline-start" />{tab.label}</button> })}</nav><button className="rounded-sm p-2 text-slate-900 md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}>{menuOpen ? <X /> : <Menu />}</button></div>{menuOpen && <nav className="flex flex-col gap-1 border-t border-slate-200 bg-white p-4 md:hidden">{tabs.map((tab) => <button key={tab.id} onClick={() => { setActiveTab(tab.id); setMenuOpen(false) }} className="px-4 py-3 text-left text-sm font-bold text-slate-700">{tab.label}</button>)}</nav>}</header>{activeTab === 'about' ? <Hero /> : <Placeholder type={activeTab} />}</main> }
