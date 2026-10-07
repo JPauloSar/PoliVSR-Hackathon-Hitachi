@@ -20,7 +20,7 @@ function curveY(hour: number) { return 10 + 28 * Math.exp(-((hour - 10.5) ** 2) 
 function getReactorCount(hour: number) { return Math.round(12 + 155 * Math.exp(-((hour - 12) ** 2) / 28)) }
 
 function BrandMark() {
-  return <span className="flex items-center gap-1.5" aria-label="PoliVSR"><svg viewBox="0 0 100 100" className="size-7 text-slate-900" role="img" aria-label="Marca PoliVSR"><g transform="rotate(-15 50 50)"><ellipse cx="25" cy="50" rx="20" ry="38" fill="none" stroke="currentColor" strokeWidth="7" /><ellipse cx="50" cy="50" rx="20" ry="38" fill="none" stroke="currentColor" strokeWidth="7" /><ellipse cx="75" cy="50" rx="20" ry="38" fill="none" stroke="currentColor" strokeWidth="7" /></g></svg><span className="text-[1.35rem] font-extrabold tracking-[-.06em]">Poli<span className="text-[#e60000]">VSR</span></span></span>
+  return <span className="flex items-center gap-1.5" aria-label="PoliVSR"><svg viewBox="0 0 28 28" className="size-7 skew-x-[-15deg]" role="img" aria-label="Marca PoliVSR"><ellipse cx="7" cy="14" rx="3.2" ry="10" fill="none" stroke="currentColor" strokeWidth="3" /><ellipse cx="14" cy="14" rx="3.2" ry="10" fill="none" stroke="currentColor" strokeWidth="3" /><ellipse cx="21" cy="14" rx="3.2" ry="10" fill="none" stroke="currentColor" strokeWidth="3" /></svg><span className="text-[1.35rem] font-extrabold tracking-[-.06em]">Poli<span className="text-[#e60000]">VSR</span></span></span>
 }
 
 function CurveChart({ hour, onChange }: { hour: number; onChange: (hour: number) => void }) {
