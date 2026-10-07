@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { ArrowRight, BarChart3, Building2, Check, CircleDollarSign, Factory, FileText, Search, UsersRound, UtilityPole } from 'lucide-react'
 import { Area, AreaChart, CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
+import { ChartContainer, ChartTooltip } from '@/components/ui/chart'
 
 type TabId = 'about' | 'data' | 'simulator'
 type Audience = 'Engenharia' | 'Economia' | 'Público Geral'
@@ -97,15 +97,22 @@ const sparklineData: Record<Scenario, { value: number }[]> = {
 }
 
 function ScenarioCard({ name, sample, icon: Icon, active, onSelect }: { name: Scenario; sample: string; icon: typeof Building2; active: boolean; onSelect: () => void }) {
-  return <button type="button" aria-pressed={active} onClick={onSelect} className={`flex min-h-32 w-full items-center gap-4 rounded-xl border-2 p-4 text-left transition-colors ${active ? 'border-emerald-600 bg-emerald-50' : 'border-slate-200 bg-white hover:border-slate-400'}`}><span className={`flex size-11 shrink-0 items-center justify-center rounded-lg ${active ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'}`}><Icon aria-hidden="true" /></span><span className="min-w-0 flex-1"><strong className="block text-base text-slate-950">{name}</strong><span className="mt-1 block text-xs text-slate-500">{sample}</span><span className="mt-3 block h-10 w-full" aria-hidden="true"><ResponsiveContainer width="100%" height="100%"><LineChart data={sparklineData[name]}><Line type="monotone" dataKey="value" stroke="#94a3b8" strokeWidth={2} dot={false} /></LineChart></ResponsiveContainer></span></span>{active && <Check className="shrink-0 text-emerald-600" aria-label="Cenário selecionado" />}</button>
+  return <button type="button" aria-pressed={active} onClick={onSelect} className={`flex min-h-32 w-full flex-row items-center justify-between gap-4 rounded-xl border-2 p-4 text-left transition-colors ${active ? 'border-emerald-600 bg-emerald-50' : 'border-slate-200 bg-white hover:border-slate-400'}`}><span className="flex min-w-0 flex-1 items-center gap-3"><span className={`flex size-11 shrink-0 items-center justify-center rounded-lg ${active ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'}`}><Icon aria-hidden="true" /></span><span className="min-w-0"><strong className="block text-base text-slate-950">{name}</strong><span className="mt-1 block text-xs text-slate-500">{sample}</span></span>{active && <Check className="shrink-0 text-emerald-600" aria-label="Cenário selecionado" />}</span><span className="h-16 w-32 shrink-0" aria-hidden="true"><ResponsiveContainer width="100%" height="100%"><LineChart data={sparklineData[name]}><Line type="monotone" dataKey="value" stroke="#ef4444" strokeWidth={2} dot={false} /></LineChart></ResponsiveContainer></span></button>
 }
 
 function FinancialSlider({ label, value, min, max, step, format, onChange }: { label: string; value: number; min: number; max: number; step: number; format: (value: number) => string; onChange: (value: number) => void }) {
   return <label className="flex min-h-24 flex-col justify-center gap-3"><span className="flex items-center justify-between gap-4 text-sm font-semibold text-slate-700"><span>{label}</span><strong className="whitespace-nowrap text-slate-950">{format(value)}</strong></span><input type="range" min={min} max={max} step={step} value={value} onChange={event => onChange(Number(event.currentTarget.value))} className="h-8 w-full cursor-grab touch-none accent-red-600 active:cursor-grabbing" /></label>
 }
 
+function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ payload: { fixed: number; upper: number; lower: number; vsr: number } }>; label?: string }) {
+  if (!active || !payload?.length) return null
+  const point = payload[0].payload
+  const margin = (point.upper - point.lower) / 2
+  return <div className="rounded-lg border border-gray-200 bg-white p-3 text-sm shadow-lg"><p className="font-bold text-slate-950">{label}</p><p className="mt-2 text-red-500">Reator Fixo (Média): {money.format(point.fixed)}</p><p className="mt-1 text-xs text-slate-500">Margem de Risco: ± {money.format(margin)}</p><p className="mt-1 text-emerald-500">VSR (Estável): {money.format(point.vsr)}</p></div>
+}
+
 function FanChart() {
-  return <ChartContainer config={{ fixed: { label: 'Reator Fixo', color: '#e60000' }, vsr: { label: 'VSR', color: '#10b981' }, band: { label: 'Névoa do risco', color: '#fca5a5' } }} className="h-[280px] w-full"><AreaChart data={fanChartData} margin={{ top: 12, right: 12, bottom: 0, left: 8 }}><CartesianGrid vertical={false} stroke="#e2e8f0" /><XAxis dataKey="year" tickLine={false} axisLine={false} tickMargin={8} /><YAxis tickLine={false} axisLine={false} tickFormatter={value => `${Math.round(value / 1000000)}M`} /><ChartTooltip contentStyle={{ backgroundColor: '#ffffff', color: '#000000', border: '1px solid #e2e8f0', borderRadius: '8px', boxShadow: '0 0.5rem 1rem -1px rgba(15, 23, 42, 0.1)' }} itemStyle={{ color: '#000000', fontWeight: 600 }} labelStyle={{ color: '#0f172a' }} content={<ChartTooltipContent formatter={(value) => money.format(Number(value))} />} /><Area dataKey="upper" type="monotone" stroke="none" fill="#fecaca" fillOpacity={0.55} /><Area dataKey="lower" type="monotone" stroke="none" fill="#ffffff" fillOpacity={1} /><Line dataKey="fixed" type="monotone" stroke="var(--color-fixed)" strokeWidth={4} dot={false} /><Area dataKey="vsr" type="monotone" stroke="#10b981" fill="transparent" strokeWidth={3} dot={false} /></AreaChart></ChartContainer>
+  return <ChartContainer config={{ fixed: { label: 'Reator Fixo', color: '#e60000' }, vsr: { label: 'VSR', color: '#10b981' }, band: { label: 'Névoa do risco', color: '#fca5a5' } }} className="h-[280px] w-full"><AreaChart data={fanChartData} margin={{ top: 12, right: 12, bottom: 0, left: 8 }}><CartesianGrid vertical={false} stroke="#e2e8f0" /><XAxis dataKey="year" tickLine={false} axisLine={false} tickMargin={8} /><YAxis tickLine={false} axisLine={false} tickFormatter={value => `${Math.round(value / 1000000)}M`} /><ChartTooltip content={<CustomTooltip />} /><Area dataKey="upper" type="monotone" stroke="none" fill="#fecaca" fillOpacity={0.55} /><Area dataKey="lower" type="monotone" stroke="none" fill="#ffffff" fillOpacity={1} /><Line dataKey="fixed" type="monotone" stroke="var(--color-fixed)" strokeWidth={4} dot={false} /><Area dataKey="vsr" type="monotone" stroke="#10b981" fill="#10b981" fillOpacity={0} strokeWidth={3} dot={false} /></AreaChart></ChartContainer>
 }
 
 function SimulatorPage({ onNavigate }: { onNavigate: (tab: TabId) => void }) {
