@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowRight, BarChart3, CircleHelp, Gauge, Search } from 'lucide-react'
+import { ArrowRight, BarChart3, CircleDollarSign, CircleHelp, Search } from 'lucide-react'
 
 type TabId = 'about' | 'data' | 'simulator'
 type Audience = 'Engenharia' | 'Economia' | 'Público Geral'
@@ -11,7 +11,7 @@ type Study = { audience: Audience; title: string; level?: string; summary: strin
 const tabs = [
   { id: 'about' as const, label: 'Quem Somos', icon: CircleHelp },
   { id: 'data' as const, label: 'Pesquisas e Dados', icon: BarChart3 },
-  { id: 'simulator' as const, label: 'Simulador Gameficado', icon: Gauge },
+  { id: 'simulator' as const, label: 'Simulador Gameficado', icon: CircleDollarSign },
 ]
 
 function curveY(hour: number) { return 10 + 28 * Math.exp(-((hour - 10.5) ** 2) / 24) }
