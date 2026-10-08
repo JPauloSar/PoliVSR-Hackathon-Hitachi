@@ -62,7 +62,6 @@ const studies: Study[] = [
   { audience: 'Engenharia', title: 'Controle Dinâmico Lento e o uso de OLTC em Reatores', level: 'Doutorado', summary: 'Modelagem do comportamento do comutador de derivação para estabilidade de tensão.' },
   { audience: 'Economia', title: 'Calculadora de Payback: CAPEX vs OPEX do VSR', level: 'Mestrado', summary: 'Comparativo financeiro da adoção da tecnologia frente aos custos de manutenção de longo prazo.' },
   { audience: 'Economia', title: 'Custos Operacionais Invisíveis da Rigidez do Grid', level: 'IC', summary: 'O preço real que as transmissoras pagam pela limitação dos reatores fixos atuais.' },
-  { audience: 'Economia', title: 'Transferência de Tecnologia (ToT) e a Produção Nacional', summary: 'Estudo sobre a viabilidade industrial do VSR no HUB da Hitachi Energy em Guarulhos.' },
 ]
 
 function ArticleView({ article, onBack, onSelect, onNavigate }: { article: Study; onBack: () => void; onSelect: (article: Study) => void; onNavigate: (tab: TabId) => void }) {
