@@ -125,7 +125,7 @@ function FanChart() {
         setIsVisible(true)
         observer.disconnect()
       }
-    }, { once: true } as IntersectionObserverInit)
+    })
     observer.observe(node)
     return () => observer.disconnect()
   }, [])
