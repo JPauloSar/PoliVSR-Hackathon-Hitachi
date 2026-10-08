@@ -39,7 +39,7 @@ const blocks = [
 
 function PageEndNavigation({ activeTab, onNavigate }: { activeTab: TabId; onNavigate: (tab: TabId) => void }) {
   const availableTabs = tabs.filter(tab => tab.id !== activeTab)
-  return <nav className="border-t border-slate-200 bg-white px-6 py-12" aria-label="Explorar outras páginas"><div className="mx-auto flex max-w-5xl flex-col items-center gap-5 sm:flex-row sm:justify-center sm:gap-8">{availableTabs.map(tab => { const Icon = tab.icon; return <button key={tab.id} onClick={() => onNavigate(tab.id)} className="flex items-center gap-2 rounded px-4 py-3 text-sm font-bold text-slate-600 transition hover:bg-slate-100 hover:text-[#e60000]"><Icon aria-hidden="true" />{tab.label}</button> })}</div></nav>
+  return <nav className="border-t border-slate-200 bg-white px-6 py-12" aria-label="Explorar outras páginas"><div className="mx-auto flex max-w-5xl flex-col items-center gap-5 sm:flex-row sm:justify-center sm:gap-8">{availableTabs.map(tab => { const Icon = tab.icon; return <button key={tab.id} onClick={() => onNavigate(tab.id)} className={`flex items-center gap-2 text-sm font-bold transition ${tab.id === 'simulator' ? 'rounded-full bg-red-600 px-5 py-2.5 text-white shadow-[0_0_12px_3px_rgba(230,0,0,0.38)] hover:bg-red-700' : 'rounded px-4 py-3 text-slate-600 hover:bg-slate-100 hover:text-[#e60000]'}`}><Icon aria-hidden="true" />{tab.label}</button> })}</div></nav>
 }
 
 function Hero({ onNavigate }: { onNavigate: (tab: TabId) => void }) {
