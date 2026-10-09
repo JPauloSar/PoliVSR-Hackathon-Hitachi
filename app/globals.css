@@ -167,6 +167,31 @@
   animation: cta-aurora 3s ease-in-out infinite;
 }
 
+@keyframes cta-edge-light {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-cta-aurora::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(from 0deg, transparent 0deg 255deg, rgba(255, 255, 255, 0.08) 272deg, rgba(255, 255, 255, 0.85) 286deg, rgba(239, 68, 68, 0.7) 300deg, transparent 322deg 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  filter: blur(0.2px) drop-shadow(0 0 5px rgba(239, 68, 68, 0.55));
+  animation: cta-edge-light 4.5s linear infinite;
+  pointer-events: none;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
