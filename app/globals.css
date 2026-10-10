@@ -170,14 +170,33 @@
 }
 
 
-/* No mobile, o gráfico lidera a calculadora; os demais blocos mantêm sua ordem original abaixo dele. */
+/* Mobile: o gráfico abre a calculadora; métricas e controles seguem em sua ordem original. */
 @media (max-width: 1023px) {
   .calculator-layout > div:last-child {
     display: contents;
   }
 
+  .calculator-layout > div:first-child {
+    order: 2;
+  }
+
+  .calculator-layout > div:last-child > * {
+    order: 1;
+  }
+
   .calculator-layout .chart-risk-container {
     order: -1;
+  }
+
+  .calculator-layout table {
+    table-layout: auto;
+    min-width: 0;
+  }
+
+  .calculator-layout table th:first-child,
+  .calculator-layout table td:first-child {
+    width: 3.25rem;
+    padding-inline: 0.375rem;
   }
 }
 
