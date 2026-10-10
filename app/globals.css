@@ -170,14 +170,14 @@
 }
 
 
-/* No mobile, a visualização do risco aparece antes dos controles; em telas maiores a ordem original é preservada. */
+/* No mobile, o gráfico lidera a calculadora; os demais blocos mantêm sua ordem original abaixo dele. */
 @media (max-width: 1023px) {
-  .calculator-layout > div:first-child {
-    order: 2;
+  .calculator-layout > div:last-child {
+    display: contents;
   }
 
-  .calculator-layout > div:last-child {
-    order: 1;
+  .calculator-layout .chart-risk-container {
+    order: -1;
   }
 }
 
