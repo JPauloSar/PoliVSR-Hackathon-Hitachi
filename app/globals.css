@@ -170,6 +170,17 @@
 }
 
 
+/* No mobile, a visualização do risco aparece antes dos controles; em telas maiores a ordem original é preservada. */
+@media (max-width: 1023px) {
+  .calculator-layout > div:first-child {
+    order: 2;
+  }
+
+  .calculator-layout > div:last-child {
+    order: 1;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
